@@ -1,4 +1,7 @@
 import { Index } from "@upstash/vector";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 // Generic type for the product
 type Product = {
