@@ -11,7 +11,10 @@ import { QueryResult } from "@upstash/vector";
 import axios from "axios";
 import { ChevronDown, Filter } from "lucide-react";
 import { useState } from "react";
-import type { Product } from "@/db";
+import type { Product as TProduct } from "@/db";
+import Product from "@/components/Products/Product";
+import ProductSkeleton from "@/components/Products/ProductSkeleton";
+
 const SORT_OPTIONS = [
   { name: "None", value: "none" },
   { name: "Price: Low to High", value: "price-asc" },
@@ -26,9 +29,9 @@ export default function Home() {
   const { data: products } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
-      const { data } = await axios.post<QueryResult<Product>[]>(
+      const { data } = await axios.post<QueryResult<TProduct>[]>(
         "http://localhost:3000/api/products",
-        { 
+        {
           filter: {
             sort: filter.sort,
           },
@@ -39,7 +42,7 @@ export default function Home() {
   });
 
   console.log(products);
-  
+
   return (
     <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
@@ -77,6 +80,23 @@ export default function Home() {
           </button>
         </div>
       </div>
+      <section className="pb-24 pt-6">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+          {/* Filters */}
+          <div></div>
+
+          {/* Product Grid*/}
+          <ul className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            {products
+              ? products.map((product, index) => (
+                  <Product product={product.metadata!} key={index}/>
+                ))
+              : new Array(12)
+                  .fill(null)
+                  .map((_, index) => <ProductSkeleton key={index} />)}
+          </ul>
+        </div>
+      </section>
     </main>
   );
 }
