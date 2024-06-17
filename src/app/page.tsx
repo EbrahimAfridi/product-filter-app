@@ -14,12 +14,20 @@ import { useState } from "react";
 import type { Product as TProduct } from "@/db";
 import Product from "@/components/Products/Product";
 import ProductSkeleton from "@/components/Products/ProductSkeleton";
+import { Accordion } from "@radix-ui/react-accordion";
 
 const SORT_OPTIONS = [
   { name: "None", value: "none" },
   { name: "Price: Low to High", value: "price-asc" },
   { name: "Price: High to Low", value: "price-desc" },
 ] as const;
+
+const SUB_CATEGORIES = [
+  { name: "T-Shirts", href: "#", selected: true },
+  { name: "Hoodies", href: "#", selected: false },
+  { name: "Sweatshirts", href: "#", selected: false },
+  { name: "Accessories", href: "#", selected: false },
+];
 
 export default function Home() {
   const [filter, setFilter] = useState({
@@ -83,13 +91,29 @@ export default function Home() {
       <section className="pb-24 pt-6">
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
           {/* Filters */}
-          <div></div>
+          <div className="hidden lg:block">
+            <ul className="space-y-1 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
+              {SUB_CATEGORIES.map((category) => (
+                <li key={category.name} className="">
+                  <button
+                    disabled={category.selected}
+                    className="w-full h-full rounded-sm hover:cursor-pointer text-left hover:bg-gray-200 p-2 disabled:cursor-not-allowed disabled:opacity-50 hover:text-gray-900"
+                  >
+                    {category.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <Accordion type='multiple' className="animate-none">
+              {/* Color Filter */}
+            </Accordion>
+          </div>
 
           {/* Product Grid*/}
           <ul className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {products
               ? products.map((product, index) => (
-                  <Product product={product.metadata!} key={index}/>
+                  <Product product={product.metadata!} key={index} />
                 ))
               : new Array(12)
                   .fill(null)
