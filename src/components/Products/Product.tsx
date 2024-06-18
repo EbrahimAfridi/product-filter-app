@@ -1,5 +1,4 @@
-import { Product } from "@/db";
-import Image from "next/image";
+import type { Product } from "@/db";
 
 const Product = ({ product }: { product: Product }) => {
   return (
